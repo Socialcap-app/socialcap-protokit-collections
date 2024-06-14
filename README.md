@@ -17,7 +17,7 @@ We want to advance the following milestones using Protokit features:
 
 **A3. Efficient + Provable collections** 
 
-- Collections: Communities, Persons, Members, Plans, Claims, Tasks, Credentials
+- Collections: Communities, Persons, Members, Plans, Claims, Tasks
 - Analyze alternative implementations         
 - Define integration points         
 - Refactor current code to support integration           
@@ -37,41 +37,48 @@ We want to advance the following milestones using Protokit features:
 
 **Entity**
 
-An Entity is basically a JS object which can be serialized and deserialized using JSON, but with some additional restrictions:
+An *Entity* is a fundamental object that represents a single unit of data which can be stored in a database. In this context, an Entity is a JavaScript object that can be serialized and deserialized using JSON, with some additional restrictions:
 
-- It can be fully stored as a row in Relational DB, so it should be possible for any of its properties to be converted to some DB datatypes.
-- It MUST have a unique UID (UUID), so it can be accessed using its unique UID.
-- It will be an instance of some EntityClass, and this class can be mapped to some table in a Relational DB. 
+- It can be fully stored as a row in a Relational Database, meaning all its properties should be convertible to database datatypes.
+- It MUST have a unique Uid (UUID) to ensure it can be uniquely identified and accessed.
+- It will be an instance of a specific EntityClass, which maps to a table in a Relational Database.
 
-An EntityClass should provide some basic method for its instances: 
+An EntityClass should provide basic methods for its instances:
 
-- toJSON(entity): creates a serialized version of the entity
-- fromJSON(entity): parses a serialized version and returns the entity
-- hash(entity): creates a content hash using the entity properties
+- `toJSON(entity)`: creates a serialized version of the entity.
+- `fromJSON(entity)`: parses a serialized version and returns the entity.
+- `hash(entity)`: generates a content hash using the entity’s properties.
 
-**Collections**:
+**Collections**
 
-A Collection of a given EntityClass is an unordered set of instances of such EntityClass.
-
-Each collection will have an ssociated MerkleMap where:
-
-- It will have one (and only one) leaf per entity
-- The Merkle Leaf key will be the UID of the given entity
-- The Merke Leaf value will be the hash(entity)
+A Collection of a given EntityClass is an unordered set of instances of that EntityClass.
 
 Collections allow the following operations:
 
-- Get a given instance of the collections using its UID.
-- Get a filtered and ordered set of the collection using some query language (SQL)
-- Prove that a given instance has not been "tampered" (modified in the DB by unknow methods).
-- Use its Merkle root and witness to prove some entity effectively belongs to the given collection.
+- Retrieve a specific instance from the collection using its UID.
+- Get a filtered and ordered subset of the collection using a query language (e.g., SQL).
+- Verify that a given instance has not been tampered with (modified in the database by unknown methods).
+- Use Protokit to prove that an entity belongs to the given collection.
+
+**Provable collection**
+
+By _"provable"_ we mean that at some later time we may need to "prove" that the a given entity coming from the  Db has not been altered by any external unauthorized parties without regulated control. By "regulated control" we mean a given API RPC call, which is considered as the only "accepted" way to change a row in the Db.
+
+To whom are we proving it? We are talking in particular about external auditors (such as ISO 9000/14000 or FDA CFR21 Part 11 auditors), conducting an external audit on the data.
+
+How we can prove it ? Because we store the hash for every record on the Protokit appChain, the data can be stored anywhere (ideally replicated). And as long as we can fetch the data and hash it, we can compare it with what is stored on the appChain and show it has not been "altered" in any way.
 
 ## Architecture
 
-The UI will continue to use the current API to manage the different collections in the IndexerDb, but every time we insert/update/remove a collection we will create a Protokit transaction.
+The UI will continue to use the current API to manage the different collections in the IndexerDb, but every time we insert/update/remove a collection we will create a Protokit transaction. Here is how we do it:
 
-We can not store the full item content in Protokit (because non-o1js
-types are not supported), so we just store a hash of the item full content,
+1. We insert or update a  row in our IndexerDb using the API (standard RPC call) , for example a new person/profile, a new community, etc. Each row/entity has its unique Uid (strictly an UUID) in the full Db.
+2. After doing this, we hash the full content of the inserted/updated row and get the `contentHash` and the `contentSize` of this row. We will use the `hash(entity)` method provided by the EntityClass.
+3. We then send a transaction to Protokit for the given collection (for example Communities) and so we have the row `contentHash` and `contentsSize` stored in the appChain, refered by its `uid`. 
+4. When the transaction has been completed, we detect it (using the indexer) and add the completed transaction id to the row, to assert that the given row has been finally stored in the appChain.
+
+**Note**: We can not store the full item content in Protokit (because non-o1js
+types are not supported), so we need to just store a hash of the item full content,
 and its size. The item content `hash` and `size` must be computed outside the runtimeMethod called when sending the Protokit transaction.
 
 FUTURE WORK: It may be better to have a particular runtimeModule

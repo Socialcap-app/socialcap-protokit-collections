@@ -78,22 +78,21 @@ export class Collection extends RuntimeModule<Record<string, never>> {
     this.items.set(item.uid, item);
   }
 
-/*   
   @runtimeMethod()
-  public updateItem(params: {
-    uid: UID;
-    hash: Field;
-    size: UInt32;
-    updater: UID;
-  }) {
-    const storedItem = this.items.get(params.uid);
+  public updateItem(
+    uid: UID,
+    hash: Field,
+    size: UInt32,
+    updater: UID,
+  ) {
+    const storedItem = this.items.get(uid);
     assert(storedItem.isSome, "CollectionItem does not exist");
 
     const item = new CollectionItem({
-      uid: params.uid,
-      contentHash: params.hash,
-      contentSize: params.size,
-      updaterUid: params.updater,
+      uid: uid,
+      contentHash: hash,
+      contentSize: size,
+      updaterUid: updater,
       createdAt: storedItem.value.createdAt,
       updatedAt: UInt64.from(this.network.block.height),
       owner: this.transaction.sender.value,
@@ -101,8 +100,22 @@ export class Collection extends RuntimeModule<Record<string, never>> {
 
     this.items.set(item.uid, item);
   }
- */
 }
 
 @runtimeModule()
 export class Communities extends Collection {};
+
+@runtimeModule()
+export class Persons extends Collection {};
+
+@runtimeModule()
+export class Members extends Collection {};
+
+@runtimeModule()
+export class Plans extends Collection {};
+
+@runtimeModule()
+export class Claims extends Collection {};
+
+@runtimeModule()
+export class Tasks extends Collection {};
