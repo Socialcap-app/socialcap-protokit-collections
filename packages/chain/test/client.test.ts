@@ -1,6 +1,6 @@
 import { PrivateKey } from "o1js";
 import { log } from "@proto-kit/common";
-import { ClientAppChain } from "@proto-kit/sdk";
+import { ClientAppChain, InMemorySigner } from "@proto-kit/sdk";
 import { BalancesKey, TokenId, UInt64 } from "@proto-kit/library";
 import { Balances } from "../src/balances";
 
@@ -21,13 +21,15 @@ describe("balances", () => {
       },
     });
 
-    await appChain.start();
-
     const alicePrivateKey = PrivateKey.random();
     const alice = alicePrivateKey.toPublicKey();
     const tokenId = TokenId.from(0);
 
-    // appChain.setSigner(alicePrivateKey);
+    await appChain.start();
+
+    (appChain as any).container
+      .resolveOrFail('Signer', InMemorySigner)
+      .setSigner(alicePrivateKey);
 
     const balances = appChain.runtime.resolve("Balances");
 
