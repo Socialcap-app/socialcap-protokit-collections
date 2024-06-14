@@ -18,16 +18,10 @@
  * for each collection type. But for now this can be a good starting point 
  * in how to use Protokit with Socialcap.
  */
-import {
-  RuntimeModule,
-  runtimeMethod,
-  state,
-  runtimeModule,
-} from "@proto-kit/module";
+import { RuntimeModule, runtimeMethod, state, runtimeModule} from "@proto-kit/module";
 import { StateMap, assert } from "@proto-kit/protocol";
-import { Bool, Field, Poseidon, PublicKey, Struct } from "o1js";
+import { Field, PublicKey, Struct } from "o1js";
 import { UInt64, UInt32 } from "@proto-kit/library"
-// import { inject } from "tsyringe";
 
 export class UID extends Field {};
 
@@ -38,7 +32,8 @@ export class CollectionItem extends Struct({
   createdAt: UInt64,
   updatedAt: UInt64,
   updaterUid: UID,
-  owner: PublicKey // do we really have an owner for each item ?
+  publicKey: PublicKey, // "may" have an associated account publicKey
+  sender: PublicKey
 }) {}
 
 @runtimeModule()
@@ -60,7 +55,7 @@ export class Collection extends RuntimeModule<Record<string, never>> {
     uid: UID,
     hash: Field,
     size: UInt32,
-    updater: UID,
+    updater: UID,    
   ) {
     const storedItem = this.items.get(uid);
     assert(storedItem.isSome.not(), "CollectionItem already exists");
@@ -72,7 +67,8 @@ export class Collection extends RuntimeModule<Record<string, never>> {
       updaterUid: updater,
       createdAt: UInt64.from(this.network.block.height),
       updatedAt: UInt64.from(this.network.block.height),
-      owner: this.transaction.sender.value,
+      publicKey: PublicKey.empty(),
+      sender: this.transaction.sender.value,
     });
 
     this.items.set(item.uid, item);
@@ -95,9 +91,32 @@ export class Collection extends RuntimeModule<Record<string, never>> {
       updaterUid: updater,
       createdAt: storedItem.value.createdAt,
       updatedAt: UInt64.from(this.network.block.height),
-      owner: this.transaction.sender.value,
+      publicKey: storedItem.value.publicKey,
+      sender: this.transaction.sender.value,
     });
 
+    this.items.set(item.uid, item);
+  }
+
+  @runtimeMethod()
+  public setPublicKey(
+    uid: UID,
+    key: PublicKey
+  ) {
+    const storedItem = this.items.get(uid);
+    assert(storedItem.isSome, "CollectionItem does not exist");
+
+    const item = new CollectionItem({
+      uid: uid,
+      contentHash: storedItem.value.contentHash,
+      contentSize: storedItem.value.contentSize,
+      updaterUid: storedItem.value.updaterUid,
+      createdAt: storedItem.value.createdAt,
+      updatedAt: UInt64.from(this.network.block.height),
+      publicKey: key,
+      sender: this.transaction.sender.value,
+    });
+  
     this.items.set(item.uid, item);
   }
 }
