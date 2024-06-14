@@ -1,8 +1,8 @@
 import { PrivateKey, Field, Poseidon } from "o1js";
 import { TestingAppChain } from "@proto-kit/sdk";
 import { log } from "@proto-kit/common";
-import { BalancesKey, TokenId, UInt64, UInt32 } from "@proto-kit/library";
-import { Collection, Communities } from "../src/collections";
+import { UInt64, UInt32 } from "@proto-kit/library";
+import { Collection } from "../src/collections";
 
 log.setLevel("ERROR");
 
