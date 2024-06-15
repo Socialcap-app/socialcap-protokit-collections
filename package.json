@@ -5,7 +5,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "start": "turbo run build && turbo run start"
   },
   "devDependencies": {
     "eslint": "^8.53.0",
@@ -14,5 +15,5 @@
     "turbo": "latest"
   },
   "packageManager": "pnpm@8.6.10",
-  "name": "starter-kit"
+  "name": "socialcap-protokit"
 }
