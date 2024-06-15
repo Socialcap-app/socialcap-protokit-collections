@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import { PrivateKey, Field, Poseidon } from "o1js";
 import { TestingAppChain } from "@proto-kit/sdk";
 import { log } from "@proto-kit/common";
@@ -9,8 +10,7 @@ log.setLevel("ERROR");
 
 describe("communities", () => {
   it("should demonstrate how Communities collection works", async () => {
-
-
+    
     // get some test signer info
     const alicePrivateKey = PrivateKey.random();
     const alice = alicePrivateKey.toPublicKey();
@@ -44,7 +44,7 @@ describe("communities", () => {
     // setup runtimeModule and send transaction
     const communities = appChain.runtime.resolve("Communities");
 
-    const itemUid = Field('66660001'); 
+    const itemUid = Field(randomInt(10000)); 
     const tx1 = await appChain.transaction(
       alice, 
       () => {

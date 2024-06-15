@@ -1,3 +1,4 @@
+import { randomInt } from "crypto";
 import { PrivateKey, Field, Poseidon } from "o1js";
 import { TestingAppChain } from "@proto-kit/sdk";
 import { log } from "@proto-kit/common";
@@ -7,7 +8,7 @@ import { ChainState, CustomAppChain } from "../src/custom-app-chain";
 
 log.setLevel("ERROR");
 
-describe("collections", () => {
+describe("Collections", () => {
   it("should demonstrate how Collection works", async () => {
 
     // get some test signer info
@@ -24,7 +25,7 @@ describe("collections", () => {
         Balances: {
           totalSupply: UInt64.from(10000),
           },
-      Collection: {}
+        Collection: {}
       },
       // CAUTION: we need to setup the signer here NOT in txn.sign() !
       // it would be good if this can be fixed 
@@ -43,7 +44,7 @@ describe("collections", () => {
     // setup runtimeModule and send transaction
     const collection = appChain.runtime.resolve("Collection");
 
-    const itemUid = Field('99990001'); 
+    const itemUid = Field(randomInt(10000)); 
     const tx1 = await appChain.transaction(
       alice, 
       () => {
@@ -61,8 +62,9 @@ describe("collections", () => {
     // wait for produced block 
     const chainState = await appChain.waitForBlock();
     const block = chainState?.block?.computed as any;
-    expect(block.txs[0].status).toBe(true);
+    console.log("Block: ", JSON.stringify(block, null, 2));
     //console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
+    expect(block.txs[0].status).toBe(true);
 
     // check changes top chain
     const storedItem = await appChain.query.runtime.Collection.items.get(itemUid);
