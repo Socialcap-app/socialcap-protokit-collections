@@ -2,7 +2,7 @@ import { PrivateKey } from "o1js";
 import { log } from "@proto-kit/common";
 import { BalancesKey, TokenId, UInt64 } from "@proto-kit/library";
 import { Balances } from "../src/balances";
-import { ChainState, CustomAppChain } from "../src/custom-app-chain";
+import { ChainState, ComputedBlockJSON, CustomAppChain } from "../src/custom-app-chain";
 
 log.setLevel("ERROR");
 
@@ -50,9 +50,9 @@ describe("Custom appChain", () => {
 
     // wait for the produced block containing this transaction 
     let chainState = await appChain.waitForBlock() as ChainState;
-    let transaction = (chainState?.block?.txs as any[])[0];
-    expect(transaction.status).toBe(true);
-    console.log("Transaction: ", JSON.stringify(transaction.tx, null, 2))
+    const block = chainState?.block?.computed as any;
+    expect(block.txs[0].status).toBe(true);
+    console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
 
     // access the runtimeModule props 
     const key = new BalancesKey({ tokenId, address: alice });
