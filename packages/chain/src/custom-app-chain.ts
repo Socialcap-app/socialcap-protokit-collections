@@ -48,13 +48,14 @@ interface ChainState {
   loading: boolean;
   block?: {
     height: string;
-  } & ComputedBlockJSON;
+    computed: ComputedBlockJSON;
+  } 
 }
 
 
 /**
- * The custom appChain configured to use InMemorySigner
- * and able to acces a remote sequencer (by it's Graphql endpoint) 
+ * The custom appChain configured to use InMemorySigner and enabled 
+ * to access a remote sequencer (by it's Graphql endpoint) 
  */
 class CustomAppChain<
   RuntimeModules extends RuntimeModulesRecord,
@@ -163,7 +164,7 @@ class CustomAppChain<
       block: undefined
     }
     
-    while (!(state.block && (state.block as any).txs?.length)) {
+    while (!(state.block && state.block.computed.txs?.length)) {
       console.log("Polling block state"); 
       await delay(2); // 2 seconds
 
@@ -179,8 +180,6 @@ class CustomAppChain<
       const { data } = (await response.json()) as BlockQueryResponse;
 
       state = chainState(data); 
-      // console.log("data: ", JSON.stringify(data, null, 2)); 
-      // console.log("state: ", JSON.stringify(state, null, 2)); 
     }
 
     return state;
@@ -189,17 +188,15 @@ class CustomAppChain<
 
 
 /** 
- * Block state and wait helpers
+ * Block state Helpers
  */
-
-
 const chainState = (data: any) => {
   return {
     loading: false,
     block: data.network.unproven
       ? {
           height: data.network.unproven.block.height,
-          ...data.block,
+          computed: data.block,
         }
       : undefined
   } 
