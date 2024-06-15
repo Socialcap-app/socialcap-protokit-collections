@@ -27,11 +27,6 @@ describe("communities", () => {
           },
         Communities: {}
       },
-      // CAUTION: we need to setup the signer here NOT in txn.sign() !
-      // it would be good if this can be fixed 
-      Signer: { 
-        signer: alicePrivateKey 
-      },
       // CAUTION: we need to setup the sequencer URL here if the sequencer 
       // is running in some remote host and not in localhost
       GraphqlClient: {
@@ -43,6 +38,8 @@ describe("communities", () => {
 
     // setup runtimeModule and send transaction
     const communities = appChain.runtime.resolve("Communities");
+
+    appChain.setSigner(alicePrivateKey);
 
     const itemUid = Field(randomInt(10000)); 
     const tx1 = await appChain.transaction(

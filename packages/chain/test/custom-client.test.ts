@@ -25,11 +25,6 @@ describe("Custom appChain", () => {
           totalSupply: UInt64.from(10000),
         },
       },
-      // CAUTION: we need to setup the signer here NOT in txn.sign() !
-      // it would be good if this can be fixed 
-      Signer: { 
-        signer: alicePrivateKey 
-      },
       // CAUTION: we need to setup the sequencer URL here if the sequencer 
       // is running in some remote host and not in localhost
       GraphqlClient: {
@@ -38,10 +33,16 @@ describe("Custom appChain", () => {
     });
 
     await appChain.start();
-
-    // setup the runtimeModule we will use and send the transaction
+    
+    // setup the runtimeModule we will use 
     const balances = appChain.runtime.resolve("Balances");
 
+    // CAUTION: we need to setup the signer here because txn.sign() does
+    // not accepted any args. Would be good if this can be fixed, and work
+    // similar to how the o1js txm.sign() works.
+    appChain.setSigner(alicePrivateKey);
+
+    // now we are ready to send the transaction !
     const tx1 = await appChain.transaction(alice, () => {
       balances.addBalance(tokenId, alice, UInt64.from(1000));
     });

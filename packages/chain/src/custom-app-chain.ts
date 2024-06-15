@@ -154,6 +154,18 @@ class CustomAppChain<
   }
 
   /**
+   * Setup the private key that will be used to sign transactions.
+   * We need to setup the signer here because txn.sign() does 
+   * not accepted any args. Would be good if this can be fixed, and work
+   * similar to how the o1js txm.sign() works.
+   * @param signer: PrivateKey  
+   */
+  public setSigner(signer: PrivateKey) {
+    const inMemorySigner = this.resolveOrFail("Signer", InMemorySigner);
+    inMemorySigner.config.signer = signer;
+  }
+
+  /**
    * Wait for a block to be produced and includes transactions.
    * The produced block: 
    * @returns the produced block
