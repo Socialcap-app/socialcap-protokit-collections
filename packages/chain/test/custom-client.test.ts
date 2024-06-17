@@ -2,7 +2,7 @@ import { PrivateKey } from "o1js";
 import { log } from "@proto-kit/common";
 import { BalancesKey, TokenId, UInt64 } from "@proto-kit/library";
 import { Balances } from "../src/balances";
-import { ChainState, ComputedBlockJSON, CustomAppChain } from "../src/custom-app-chain";
+import { ChainState, CustomAppChain } from "../src/custom-app-chain";
 
 log.setLevel("ERROR");
 

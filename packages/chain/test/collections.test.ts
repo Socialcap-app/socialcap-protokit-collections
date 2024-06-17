@@ -60,7 +60,7 @@ describe("Collections", () => {
     const chainState = await appChain.waitForBlock();
     const block = chainState?.block?.computed as any;
     console.log("Block: ", JSON.stringify(block, null, 2));
-    //console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
+    console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
     expect(block.txs[0].status).toBe(true);
 
     // check changes top chain
