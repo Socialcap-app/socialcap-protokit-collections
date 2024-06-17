@@ -18,6 +18,9 @@
     "declarationMap": true,
     "strictFunctionTypes": true
   },
+  "ts-node": {
+    "experimentalSpecifierResolution": "node"
+  },
   "files": ["node_modules/jest-expect-message/types/index.d.ts"],
   "include": ["./src/**/*"],
   "exclude": ["jest.config.cjs"]

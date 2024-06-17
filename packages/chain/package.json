@@ -59,6 +59,9 @@
     "util": "^0.12.5"
   },
   "dependencies": {
-    "reflect-metadata": "^0.2.1"
+    "dotenv": "^16.4.5",
+    "nats": "^2.26.0",
+    "reflect-metadata": "^0.2.1",
+    "ts-node": "^10.9.2"
   }
 }
