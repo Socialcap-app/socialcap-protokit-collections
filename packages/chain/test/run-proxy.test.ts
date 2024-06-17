@@ -20,7 +20,12 @@ export async function start() {
         totalSupply: Balance.from(1000000),
       },
       Collection: {},
-      Communities: {}
+      Communities: {},
+      Persons: {},
+      Members: {},
+      Claims: {},
+      Plans: {},
+      Tasks: {}
     },
     Signer: {
       signer: alicePrivateKey,

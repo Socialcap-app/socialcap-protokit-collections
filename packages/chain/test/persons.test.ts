@@ -29,7 +29,7 @@ describe("Persons", () => {
     const chainState = await dispatcher.chain.waitForBlock();
     const block = chainState?.block?.computed as any;
     expect(block.txs[0].status).toBe(true);
-    console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
+    //console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
 
     // check changes top chain
     const storedItem = await dispatcher.chain.query.runtime.Persons.items.get(Field(itemUid));

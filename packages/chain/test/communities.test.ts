@@ -16,7 +16,7 @@ describe("communities", () => {
 
     let dispatcher = new AppChainCollectionsDispatcher('Communities');
 
-    let txn = await dispatcher.addItem(alicePrivateKey, {
+    let txn = await dispatcher.dispatchTransaction(alicePrivateKey, {
       action: 'add',
       collection: 'Communities',
       uid: itemUid,
@@ -29,7 +29,7 @@ describe("communities", () => {
     const chainState = await dispatcher.chain.waitForBlock();
     const block = chainState?.block?.computed as any;
     expect(block.txs[0].status).toBe(true);
-    console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
+    //console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
 
     // check changes top chain
     const storedItem = await dispatcher.chain.query.runtime.Communities.items.get(Field(itemUid));

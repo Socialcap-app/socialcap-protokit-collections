@@ -53,7 +53,7 @@ describe("Custom appChain", () => {
     let chainState = await appChain.waitForBlock() as ChainState;
     const block = chainState?.block?.computed as any;
     expect(block.txs[0].status).toBe(true);
-    console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
+    // console.log("Transaction: ", JSON.stringify(block.txs[0].tx, null, 2))
 
     // access the runtimeModule props 
     const key = new BalancesKey({ tokenId, address: alice });
