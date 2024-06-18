@@ -2,7 +2,7 @@ import { ClientAppChain, InMemorySigner } from "@proto-kit/sdk";
 import { PrivateKey } from "o1js";
 import { container } from "tsyringe";
 import { Balance, TokenId } from "@proto-kit/library";
-import { modules } from "./../src/runtime";
+import { modules } from "../src/runtime";
 import { Balances } from "../src/balances";
 import { Collection, Communities } from "../src/collections";
 
