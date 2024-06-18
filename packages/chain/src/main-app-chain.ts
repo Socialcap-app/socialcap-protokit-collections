@@ -3,7 +3,7 @@ import appChain from "./chain.config";
 import { exit } from 'process';
 import { log } from "@proto-kit/common";
 
-log.setLevel("DEBUG");
+log.setLevel("INFO");
 
 const DELAY = 5000; // ms
 

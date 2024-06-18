@@ -2,8 +2,9 @@
 pnpm build
 
 node \
+  --loader ts-node/esm \
   --experimental-specifier-resolution=node \
   --experimental-vm-modules \
   --experimental-wasm-modules \
   --experimental-wasm-threads \
-  ./dist/main-app-chain.js start ./dist/chain.config.js
+  ./src/main-app-chain.ts start ./dist/chain.config.js
