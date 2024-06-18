@@ -229,6 +229,7 @@ const gqlGetBlockQuery = {
               r
               s
             }
+            hash
           }
           status
           statusMessage
