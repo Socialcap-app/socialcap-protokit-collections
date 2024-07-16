@@ -11,9 +11,10 @@ describe("Collections", () => {
 
     const itemUid = Field(randomInt(10000)); 
     await postMessage({
-      scope: 'group',
+      scope: 'protokit',
+      subject: itemUid.toString(),
       action: 'add',
-      collection: 'Communities',
+      collection: 'Persons',
       uid: itemUid.toString(),
       contentHash: Poseidon.hash([Field(0), Field(1), Field(2), Field(4)]).toString(),
       contentSize: 10,

@@ -32,11 +32,15 @@ async function handleMessage(
     data.scope === 'all' ? '' : '.'+(data.subject || 'none')
   }`;
   
+  let send = {
+    transaction: { hash: block.txs[0].tx.hash },
+    data: data
+  }
   await connection.publish(
     redirectedSubject, 
-    codec.encode(data)
+    codec.encode(send)
   );
-  logger.info(`Redirected message to: ${redirectedSubject}`)
+  logger.info(`Redirected message to: ${redirectedSubject} ${JSON.stringify(send,null,2)}`)
 }
 
 function listen(

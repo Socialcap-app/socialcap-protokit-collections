@@ -89,12 +89,26 @@ The diagram below shows the described data flow:
 
 ![Architecture](/home/mzito/dev/socialcap/collections/docs/Architecture.png)
 
-
-
 The following example shows how the different data and entities are cross related:
 
 ![Example](/home/mzito/dev/socialcap/collections/docs/Example.png)
 
+## Test
+
+~~~
+cd packages/chain
+~~~
+
+Start sequencer and listener
+~~~
+./run-app-chain.sh
+./run-listener.sh
+~~~
+
+Publish message 
+~~~
+pnpm test publish.test.ts
+~~~
 
 
 ## The Protokit starter-kit
